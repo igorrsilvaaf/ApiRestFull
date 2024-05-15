@@ -1,0 +1,321 @@
+{
+	"info": {
+		"_postman_id": "b7d46189-0bd8-4bf5-84d0-dbfd6764733f",
+		"name": "ServeRest API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20420252"
+	},
+	"item": [
+		{
+			"name": "LOGIN",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{tokenAPI}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"fulano@qa.com\",\r\n    \"password\": \"teste\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/login",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CADASTRO DE USUARIOS",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{tokenAPI}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"igor da Silva\",\r\n  \"email\": \"igor2024@qa.com.br\",\r\n  \"password\": \"olamundo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/usuarios",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LISTA USUARIOS",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{tokenAPI}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/usuarios/sgIAv7p4P2weKDrg",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"usuarios",
+						"sgIAv7p4P2weKDrg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CADASTRO DE PRODUTOS",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const postRequest = {\r",
+							"  url: pm.environment.get(\"baseURL\") + \"/login\",\r",
+							"  method: \"POST\",\r",
+							"  body: {\r",
+							"    mode: \"raw\",\r",
+							"    options: {\r",
+							"      raw: {\r",
+							"        language: \"json\"\r",
+							"      }\r",
+							"    },\r",
+							"    raw: JSON.stringify({\r",
+							"      email: \"fulano@qa.com\",\r",
+							"      password: \"teste\"\r",
+							"    })\r",
+							"  }\r",
+							"}\r",
+							"\r",
+							"pm.sendRequest(postRequest, (err, res) => {\r",
+							"  if (err) {\r",
+							"    console.error(err);\r",
+							"    return;\r",
+							"  }\r",
+							"\r",
+							"  const jsonResponse = res.json();\r",
+							"  if (!jsonResponse ||!jsonResponse.authorization) {\r",
+							"    console.error(\"Invalid response from server\");\r",
+							"    return;\r",
+							"  }\r",
+							"\r",
+							"  const auth = jsonResponse.authorization.split(\" \");\r",
+							"  if (auth.length < 2) {\r",
+							"    console.error(\"Invalid authorization token\");\r",
+							"    return;\r",
+							"  }\r",
+							"\r",
+							"  const token = auth[1];\r",
+							"  console.log(`Received token: ${token}`);\r",
+							"  pm.globals.set(\"tokenAPI\", token);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Cadastro de produtos\", () =>{\r",
+							"    pm.response.to.have.status(201)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifica a resposta do body\", () =>{\r",
+							"    pm.response.to.have.jsonBody('message', 'Cadastro realizado com sucesso')\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Verifica se a resposta possui os campos validos e se estão preenchidos\", () =>{\r",
+							"    pm.response.to.have.jsonBody('_id')\r",
+							"    pm.response.to.have.jsonBody('message')\r",
+							"    pm.expect(pm.response.json().hasOwnProperty('_id')).to.be.true;\r",
+							"    pm.expect(pm.response.json().hasOwnProperty('message')).to.be.true;\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{tokenAPI}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nome\": \"Teclado gamer XPG\",\r\n    \"preco\": 199,\r\n    \"descricao\": \"Teclado\",\r\n    \"quantidade\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/produtos",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"produtos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LISTA PRODUTOS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/produtos/CFco8KwPMLJ0wxyd",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"produtos",
+						"CFco8KwPMLJ0wxyd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CADASTRAR CARRINHO",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{tokenAPI}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"produtos\": [\r\n        {\r\n            \"idProduto\": \"12332122\",\r\n            \"quantidade\": 1\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/carrinhos",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"carrinhos"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
