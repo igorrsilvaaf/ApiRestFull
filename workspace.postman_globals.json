@@ -1,0 +1,21 @@
+{
+	"id": "d1a22e96-d79e-4774-85b7-ee45af0fede5",
+	"values": [
+		{
+			"key": "tokenAPI",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2024-05-18T14:15:20.356Z",
+	"_postman_exported_using": "Postman/11.1.2"
+}
