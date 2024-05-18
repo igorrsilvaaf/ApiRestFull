@@ -72,6 +72,21 @@
 		},
 		{
 			"name": "CADASTRO DE USUARIOS",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Pegando o ID do usuario cadastrado\", () =>{\r",
+							"  var jsonData = pm.response.json();\r",
+							"  pm.globals.set(\"userId\", jsonData._id);\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"auth": {
 					"type": "bearer",
@@ -87,7 +102,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"nome\": \"igor da Silva\",\r\n  \"email\": \"igor2024@qa.com.br\",\r\n  \"password\": \"olamundo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"raw": "{\r\n  \"nome\": \"Teste qualidade\",\r\n  \"email\": \"igor20@qa.com.br\",\r\n  \"password\": \"olamundo\",\r\n  \"administrador\": \"true\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -134,13 +149,13 @@
 					}
 				},
 				"url": {
-					"raw": "{{baseURL}}/usuarios/sgIAv7p4P2weKDrg",
+					"raw": "{{baseURL}}/usuarios/{{userId}}",
 					"host": [
 						"{{baseURL}}"
 					],
 					"path": [
 						"usuarios",
-						"sgIAv7p4P2weKDrg"
+						"{{userId}}"
 					]
 				}
 			},
@@ -153,45 +168,45 @@
 					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"const postRequest = {\r",
-							"  url: pm.environment.get(\"baseURL\") + \"/login\",\r",
-							"  method: \"POST\",\r",
-							"  body: {\r",
-							"    mode: \"raw\",\r",
-							"    options: {\r",
-							"      raw: {\r",
-							"        language: \"json\"\r",
-							"      }\r",
-							"    },\r",
-							"    raw: JSON.stringify({\r",
-							"      email: \"fulano@qa.com\",\r",
-							"      password: \"teste\"\r",
-							"    })\r",
-							"  }\r",
-							"}\r",
+							"// const postRequest = {\r",
+							"//   url: pm.environment.get(\"baseURL\") + \"/login\",\r",
+							"//   method: \"POST\",\r",
+							"//   body: {\r",
+							"//     mode: \"raw\",\r",
+							"//     options: {\r",
+							"//       raw: {\r",
+							"//         language: \"json\"\r",
+							"//       }\r",
+							"//     },\r",
+							"//     raw: JSON.stringify({\r",
+							"//       email: \"fulano@qa.com\",\r",
+							"//       password: \"teste\"\r",
+							"//     })\r",
+							"//   }\r",
+							"// }\r",
 							"\r",
-							"pm.sendRequest(postRequest, (err, res) => {\r",
-							"  if (err) {\r",
-							"    console.error(err);\r",
-							"    return;\r",
-							"  }\r",
+							"// pm.sendRequest(postRequest, (err, res) => {\r",
+							"//   if (err) {\r",
+							"//     console.error(err);\r",
+							"//     return;\r",
+							"//   }\r",
 							"\r",
-							"  const jsonResponse = res.json();\r",
-							"  if (!jsonResponse ||!jsonResponse.authorization) {\r",
-							"    console.error(\"Invalid response from server\");\r",
-							"    return;\r",
-							"  }\r",
+							"//   const jsonResponse = res.json();\r",
+							"//   if (!jsonResponse ||!jsonResponse.authorization) {\r",
+							"//     console.error(\"Invalid response from server\");\r",
+							"//     return;\r",
+							"//   }\r",
 							"\r",
-							"  const auth = jsonResponse.authorization.split(\" \");\r",
-							"  if (auth.length < 2) {\r",
-							"    console.error(\"Invalid authorization token\");\r",
-							"    return;\r",
-							"  }\r",
+							"//   const auth = jsonResponse.authorization.split(\" \");\r",
+							"//   if (auth.length < 2) {\r",
+							"//     console.error(\"Invalid authorization token\");\r",
+							"//     return;\r",
+							"//   }\r",
 							"\r",
-							"  const token = auth[1];\r",
-							"  console.log(`Received token: ${token}`);\r",
-							"  pm.globals.set(\"tokenAPI\", token);\r",
-							"});"
+							"//   const token = auth[1];\r",
+							"//   console.log(`Received token: ${token}`);\r",
+							"//   pm.globals.set(\"tokenAPI\", token);\r",
+							"// });"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -236,7 +251,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"nome\": \"Teclado gamer XPG\",\r\n    \"preco\": 199,\r\n    \"descricao\": \"Teclado\",\r\n    \"quantidade\": 1\r\n}",
+					"raw": "{\r\n    \"nome\": \"Teclado gamer gamdias\",\r\n    \"preco\": 139,\r\n    \"descricao\": \"Teclado\",\r\n    \"quantidade\": 1\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -316,6 +331,66 @@
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const postRequest = {\r",
+					"  url: pm.environment.get(\"baseURL\") + \"/login\",\r",
+					"  method: \"POST\",\r",
+					"  body: {\r",
+					"    mode: \"raw\",\r",
+					"    options: {\r",
+					"      raw: {\r",
+					"        language: \"json\"\r",
+					"      }\r",
+					"    },\r",
+					"    raw: JSON.stringify({\r",
+					"      email: \"fulano@qa.com\",\r",
+					"      password: \"teste\"\r",
+					"    })\r",
+					"  }\r",
+					"}\r",
+					"\r",
+					"pm.sendRequest(postRequest, (err, res) => {\r",
+					"  if (err) {\r",
+					"    console.error(err);\r",
+					"    return;\r",
+					"  }\r",
+					"\r",
+					"  const jsonResponse = res.json();\r",
+					"  if (!jsonResponse ||!jsonResponse.authorization) {\r",
+					"    console.error(\"Invalid response from server\");\r",
+					"    return;\r",
+					"  }\r",
+					"\r",
+					"  const auth = jsonResponse.authorization.split(\" \");\r",
+					"  if (auth.length < 2) {\r",
+					"    console.error(\"Invalid authorization token\");\r",
+					"    return;\r",
+					"  }\r",
+					"\r",
+					"  const token = auth[1];\r",
+					"  console.log(`Received token: ${token}`);\r",
+					"  pm.globals.set(\"tokenAPI\", token);\r",
+					"});"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
